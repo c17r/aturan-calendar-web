@@ -1,0 +1,3 @@
+arrow<0.8.0
+flask<0.11
+-e git+https://github.com/c17r/aturan-calendar.git@v0.3.0#egg=aturan-calendar

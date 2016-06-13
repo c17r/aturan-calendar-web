@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/../aturan-calendar/.idea/aturan-calendar.iml" filepath="$PROJECT_DIR$/../aturan-calendar/.idea/aturan-calendar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/aturan-calendar-web.iml" filepath="$PROJECT_DIR$/.idea/aturan-calendar-web.iml" />
+    </modules>
+  </component>
+</project>

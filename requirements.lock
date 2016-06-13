@@ -1,0 +1,9 @@
+arrow==0.7.0
+-e git+https://github.com/c17r/aturan-calendar.git@5cbf891ad085142388b125ae443817fe25573320#egg=aturan_calendar
+Flask==0.10.1
+itsdangerous==0.24
+Jinja2==2.8
+MarkupSafe==0.23
+python-dateutil==2.5.3
+six==1.10.0
+Werkzeug==0.11.10
