@@ -1,5 +1,6 @@
 arrow==0.7.0
 -e git+https://github.com/c17r/aturan-calendar.git@5cbf891ad085142388b125ae443817fe25573320#egg=aturan_calendar
+docutils==0.12
 Flask==0.10.1
 itsdangerous==0.24
 Jinja2==2.8

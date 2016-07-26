@@ -1,10 +1,15 @@
+import os
 import calendar
 
 from flask import Flask, json, render_template
 import converters
 
+from docutils.core import publish_parts
+import jinja2
 import arrow
 import aturan_calendar as cal
+
+CURRENT_PATH = os.path.dirname(__file__)
 
 
 app = Flask(__name__)
@@ -20,7 +25,6 @@ def week_of_month(date):
         end = days[-1]
         if (begin == 0 or date.day >= begin) and (date.day <= end or end == 0):
             return week
-
 
 @app.route('/')
 def homepage():
@@ -76,8 +80,22 @@ def ordinal(num):
 
     return fmt.format(num)
 
+@app.template_filter('version')
+def version(filename):
+    fullpath = os.path.join(CURRENT_PATH, filename[1:])
+    try:
+        timestamp = str(os.path.getmtime(fullpath))
+    except OSError:
+        return filename
+    return "{0}?v={1}".format(filename, timestamp)
+
+@app.template_filter('rst')
+def rst(text):
+    text = text.replace('(c)', '©')
+    return jinja2.Markup(publish_parts(source=text, writer_name='html')['body'])
 
 if __name__ == '__main__':
+    CURRENT_PATH = os.getcwd()
     app.config['DEBUG'] = True
     app.config['PROPAGATE_EXCEPTIONS'] = True
     app.run()
