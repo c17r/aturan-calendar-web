@@ -32,6 +32,7 @@ def deploy():
     local("tar rf %(stamptar)s application.py" % env)
     local("tar rf %(stamptar)s converters.py" % env)
     local("tar rf %(stamptar)s requirements.deploy" % env)
+    local("tar rf %(stamptar)s requirements.lock" % env)
     local("tar rf %(stamptar)s gunicorn.conf.py" % env)
 
     local("gzip %(stamptar)s" % env)
