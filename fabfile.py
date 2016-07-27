@@ -64,3 +64,9 @@ def deploy():
     sudo("%(nginx)s -s reload" % env)
 
     sudo("rm /tmp/%(server_user)s*.tar.gz" % env)
+
+@task
+def prune()
+    with settings(sudo_user=server_user):
+        with cd("/home/%(server_user)s/web" % env):
+            sudo('[ -h current ] && $(for dir in $(ls -1f | grep -e "/$" | grep -ve "$(readlink previous)\|$(readlink current)"); do rm -r $dir; done) || true')
