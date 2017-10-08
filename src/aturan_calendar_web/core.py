@@ -2,7 +2,7 @@ import os
 import calendar
 
 from flask import Flask, json, render_template
-import converters
+from . import converters
 
 from docutils.core import publish_parts
 import jinja2
@@ -11,20 +11,22 @@ import aturan_calendar as cal
 
 CURRENT_PATH = os.path.dirname(__file__)
 
-
 app = Flask(__name__)
 app.url_map.converters['date'] = converters.DateConverter
 
 
 def week_of_month(date):
+    rv = None
+    date = arrow.get(date)
+    calendar.setfirstweekday(calendar.SUNDAY)
     weeks = calendar.monthcalendar(date.year, date.month)
-    week = 0
-    for days in weeks:
-        week += 1
-        begin = days[0]
-        end = days[-1]
-        if (begin == 0 or date.day >= begin) and (date.day <= end or end == 0):
-            return week
+    for week, days in enumerate(weeks):
+        days = [d for d in days if d > 0]
+        if date.day in days:
+            rv = week + 1
+            break
+    return rv
+
 
 @app.route('/')
 def homepage():
@@ -48,12 +50,12 @@ def homepage():
 
 @app.route('/date/<date:date>')
 def api_date(date):
-    return json.dumps(cal.western_to_aturan(date))
+    return json.jsonify(cal.western_to_aturan(date))
 
 
 @app.route('/year/<int:year>')
 def api_year(year):
-    return json.dumps(cal.aturan_calendar_for_western_year(year))
+    return json.jsonify(cal.aturan_calendar_for_western_year(year))
 
 
 @app.template_filter('ordinal')
@@ -80,6 +82,7 @@ def ordinal(num):
 
     return fmt.format(num)
 
+
 @app.template_filter('version')
 def version(filename):
     fullpath = os.path.join(CURRENT_PATH, filename[1:])
@@ -89,13 +92,7 @@ def version(filename):
         return filename
     return "{0}?v={1}".format(filename, timestamp)
 
+
 @app.template_filter('rst')
 def rst(text):
-    text = text.replace('(c)', '©')
     return jinja2.Markup(publish_parts(source=text, writer_name='html')['body'])
-
-if __name__ == '__main__':
-    CURRENT_PATH = os.getcwd()
-    app.config['DEBUG'] = True
-    app.config['PROPAGATE_EXCEPTIONS'] = True
-    app.run()

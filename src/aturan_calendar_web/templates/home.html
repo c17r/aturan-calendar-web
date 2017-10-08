@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title></title>
+        <link rel="stylesheet" href="../static/main.css" type="text/css">
+    </head>
+    <body>
+
+    <h1>Gregorian to Aturan Calendar Converter</h1>
+    <hr>
+
+    <h2>Gregorian Time in UTC</h2>
+    Day #{{ today.day_of_year }} of {{ today.year }} -
+    {{ today.day_of_week }},
+    the {{ today.day | ordinal }} of
+    {{ today.month_of_year }}
+    ({{ today.week_of_month | ordinal }} Week)
+
+
+    <h2>Aturan Date</h2>
+    Day #{{ aturan.day_of_year }} of {{ aturan.year }} -
+
+    {% if not aturan.span_of_month %}
+        {{ aturan.day_of_span }}
+    {% else %}
+        {{ aturan.day_of_span }},
+        the {{ aturan.day_of_month | ordinal }} of
+        {{ aturan.month_of_year }}
+        ({{ aturan.span_of_month | ordinal }} Span)
+    {% endif %}
+
+    <h2>Info</h2>
+    <div class="info">{{ text|rst }}</div>
+    
+    <h2>Where can I get it?</h2>
+
+    <ul>
+        <li><a href="https://pypi.python.org/pypi/aturan-calendar">PyPi</a></li>
+        <li><a href="https://www.github.com/c17r/aturan-calendar/">Source</a></li>
+    </ul>
+
+    <h3>API</h3>
+    <p>
+        To get a specific date, use <b>/date/YYYY-MM-DD</b>. For example, Name of the Wind <a href="/date/2007-03-27">publishing date</a>
+    </p>
+
+    <p>
+        To get a whole year for a specified Aturan year, use <b>/year/YYYY</b>, For example, <a href="/year/2016">2016</a>
+    </p>
+
+    <h3>Comments/Questions</h3>
+
+    I'm on twitter at <a href="http://twitter.com/c17r_">c17r_</a>
+
+    </body>
+</html>

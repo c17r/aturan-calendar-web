@@ -1,5 +1,5 @@
 from datetime import datetime
-from fabric.api import task, env, settings, cd, sudo, run, local, put, path, shell_env
+from fabric.api import task, env, settings, cd, sudo, local, put, path, shell_env
 
 server_user = 'aturan_calendar'
 site_name = 'kkc'
@@ -16,6 +16,7 @@ env.supervisor = "/usr/bin/supervisorctl"
 env.server_user = server_user
 env.site_name = site_name
 
+
 @task
 def live():
     env.env = "live"
@@ -23,19 +24,15 @@ def live():
         "crow.endrun.org"
     ]
 
+
 @task
 def deploy():
-    local('find . \( -name "*.pyc" -or -name "*.pyo" -or -name "*py.class" \) -delete')
+    local('pipenv run python setup.py sdist --formats=gztar')
 
-    local("tar cf %(stamptar)s static/" % env)
-    local("tar rf %(stamptar)s templates/" % env)
-    local("tar rf %(stamptar)s application.py" % env)
-    local("tar rf %(stamptar)s converters.py" % env)
-    local("tar rf %(stamptar)s requirements.deploy" % env)
-    local("tar rf %(stamptar)s requirements.lock" % env)
-    local("tar rf %(stamptar)s gunicorn.conf.py" % env)
-
-    local("gzip %(stamptar)s" % env)
+    local("tar cf %(stamptar)s gunicorn.conf.py" % env)
+    local("tar rf %(stamptar)s wsgi.py" % env)
+    local('(cd dist && tar rf ../%(stamptar)s *.tar.gz)' % env)
+    local('gzip %(stamptar)s' % env)
 
     put(stampzip, "/tmp/%(stampzip)s" % env)
 
@@ -50,11 +47,16 @@ def deploy():
         with cd("/home/%(server_user)s/web/%(stamp)s/" % env):
             sudo("tar xfz /tmp/%(stampzip)s -C ./src/" % env)
 
+    sudo('rm /tmp/%(stampzip)s' % env)
+
+    with settings(sudo_user=server_user):
+
+        with cd("/home/%(server_user)s/web/%(stamp)s/" % env):
             with shell_env(PATH='/opt/pyenv/bin/:$PATH', PYENV_ROOT='/opt/pyenv'):
-                sudo("virtualenv venv -p $(pyenv prefix 3.5.1)/bin/python")
+                sudo("virtualenv venv -p $(pyenv prefix 3.6.2)/bin/python")
 
             with path("./venv/bin", behavior="prepend"):
-                sudo("pip install --quiet --no-cache-dir -r ./src/requirements.deploy")
+                sudo("pip install --quiet --no-cache-dir ./src/*.tar.gz")
 
         with cd("/home/%(server_user)s/web" % env):
             sudo("ln -nsf $(basename $(readlink -f current)) previous")
@@ -63,10 +65,9 @@ def deploy():
     sudo("%(supervisor)s restart aturan-calendar-web" % env)
     sudo("%(nginx)s -s reload" % env)
 
-    sudo("rm /tmp/%(server_user)s*.tar.gz" % env)
 
 @task
-def prune()
+def prune():
     with settings(sudo_user=server_user):
         with cd("/home/%(server_user)s/web" % env):
-            sudo('[ -h current ] && $(for dir in $(ls -1f | grep -e "/$" | grep -ve "$(readlink previous)\|$(readlink current)"); do rm -r $dir; done) || true')
+            sudo('[ -h current ] && $(for dir in $(ls -1f | grep -e "/$" | grep -ve "$(readlink previous)\|$(readlink current)"); do rm -r $dir; done) || true')  # noqa
