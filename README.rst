@@ -14,7 +14,7 @@
 
 .. |coveralls| image:: https://coveralls.io/repos/github/c17r/aturan-calendar-web/badge.svg?branch=master
     :alt: Coverage Status
-    :target: https://coveralls.io/repos/github/c17r/aturan-calendar-web
+    :target: https://coveralls.io/github/c17r/aturan-calendar-web
 
 .. end-badges
 
