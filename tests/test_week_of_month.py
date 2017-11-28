@@ -8,7 +8,7 @@ def test_week_of_month_none(m_cal):
     m_cal.return_value = []
 
     assert week_of_month('2017-01-01') is None
-    m_cal.assert_called()
+    m_cal.assert_called_with(2017, 1)
 
 
 def test_week_of_month_good():
