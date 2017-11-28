@@ -3,7 +3,15 @@ from unittest.mock import MagicMock, patch
 from aturan_calendar_web.core import week_of_month
 
 
-def test_week_of_month():
+@patch('aturan_calendar_web.core.calendar.monthcalendar')
+def test_week_of_month_none(m_cal):
+    m_cal.return_value = []
+
+    assert week_of_month('2017-01-01') is None
+    m_cal.assert_called()
+
+
+def test_week_of_month_good():
     values = [
         ("2017-10-01", 1), ("2017-10-02", 1), ("2017-10-03", 1), ("2017-10-04", 1), ("2017-10-05", 1),
         ("2017-10-06", 1), ("2017-10-07", 1), ("2017-10-08", 2), ("2017-10-09", 2), ("2017-10-10", 2),

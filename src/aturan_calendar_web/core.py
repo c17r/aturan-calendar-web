@@ -2,7 +2,9 @@ import os
 import calendar
 
 from flask import Flask, json, render_template
+from raven.contrib.flask import Sentry
 from . import converters
+from .__version__ import __version__
 
 from docutils.core import publish_parts
 import jinja2
@@ -13,6 +15,9 @@ CURRENT_PATH = os.path.dirname(__file__)
 
 app = Flask(__name__)
 app.url_map.converters['date'] = converters.DateConverter
+
+sentry = Sentry(app)
+sentry.client.release = __version__
 
 
 def week_of_month(date):
