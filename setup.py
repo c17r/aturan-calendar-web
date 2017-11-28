@@ -25,7 +25,13 @@ URL = 'https://github.com/{0}/{1}'.format(REPO_USERNAME, NAME)
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'arrow', 'flask', 'docutils<0.13', 'aturan-calendar', 'gunicorn', 'setproctitle'
+    'arrow',
+    'flask',
+    'docutils<0.13',
+    'aturan-calendar',
+    'gunicorn',
+    'setproctitle',
+    'raven[flask]',
 ]
 
 # The rest you shouldn't have to touch too much :)
