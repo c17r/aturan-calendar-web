@@ -11,8 +11,6 @@ arrow = "*"
 flask = "*"
 docutils = "<0.13"
 aturan-calendar = "*"
-gunicorn = "*"
-setproctitle = "*"
 raven = {extras = ["flask"]}
 
 
