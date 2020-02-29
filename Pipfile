@@ -16,7 +16,6 @@ raven = {extras = ["flask"]}
 
 [dev-packages]
 
-"fabric3" = "*"
 "flake8" = "*"
 pytest = "*"
 pytest-cov = "*"
