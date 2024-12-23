@@ -3,9 +3,9 @@ FROM c17r/py3-build AS build
 ADD . /build/
 WORKDIR /build/
 
-RUN pipenv install --sequential --dev \
-&& pipenv lock -r > requirements.txt \
-&& pipenv run python setup.py bdist_wheel
+RUN /venv/bin/pipenv install --sequential --dev \
+&& /venv/bin/pipenv lock -r > requirements.txt \
+&& /venv/bin/pipenv run python setup.py bdist_wheel
 
 FROM c17r/py3-webapp AS base
 
